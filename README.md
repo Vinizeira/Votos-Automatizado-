@@ -171,7 +171,3 @@ Para problemas:
 1. Verifique os logs em `votacao_log.txt`
 2. Teste com configurações mais conservadoras
 3. Verifique se o servidor está respondendo
-
-## ⚖️ Disclaimer
-
-Este código é fornecido apenas para fins educacionais. Use com responsabilidade e respeite os termos de serviço dos sites alvo.
