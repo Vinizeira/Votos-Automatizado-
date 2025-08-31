@@ -335,15 +335,23 @@ def verificar_status():
         # Verificar todos os processos relacionados
         processos_encontrados = []
         for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
-            if proc.info['cmdline']:
-                cmdline = ' '.join(proc.info['cmdline'])
-                if any(script in cmdline for script in ['ataque_otimizado.py', 'monitor_sistema.py']):
-                    processos_encontrados.append(proc)
+            try:
+                if proc.info['cmdline']:
+                    cmdline = ' '.join(proc.info['cmdline'])
+                    # Verificar se é um processo Python executando nossos scripts
+                    if ('python' in proc.info['name'].lower() or 'python.exe' in proc.info['name']) and any(script in cmdline for script in ['ataque_otimizado.py', 'monitor_sistema.py']):
+                        processos_encontrados.append(proc)
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                continue
         
         if processos_encontrados:
             print("\n🔍 Processos Encontrados no Sistema:")
             for proc in processos_encontrados:
-                print(f"   ✅ PID {proc.pid}: {' '.join(proc.info['cmdline'])}")
+                try:
+                    cmdline = ' '.join(proc.info['cmdline'])
+                    print(f"   ✅ PID {proc.pid}: {cmdline}")
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    print(f"   ⚠️ PID {proc.pid}: Processo inacessível")
         else:
             print("\nℹ️ Nenhum processo relacionado encontrado no sistema")
         

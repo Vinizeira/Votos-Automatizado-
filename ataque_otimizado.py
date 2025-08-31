@@ -137,7 +137,7 @@ class SistemaVotacao:
         
     def signal_handler(self, signum, frame):
         """Handler para sinais de interrupção"""
-        print(f"\n🛑 Recebido sinal {signum}. Finalizando graciosamente...")
+        print(f"\nRecebido sinal {signum}. Finalizando graciosamente...")
         self.running = False
         self.save_progress()
         sys.exit(0)
@@ -155,9 +155,9 @@ class SistemaVotacao:
         }
         
         try:
-            with open("progresso_votacao.json", "w") as f:
+            with open("progresso_votacao.json", "w", encoding='utf-8') as f:
                 json.dump(progress, f, indent=2)
-            print("💾 Progresso salvo!")
+            print("Progresso salvo!")
         except Exception as e:
             logging.error(f"Erro ao salvar progresso: {e}")
     
@@ -173,7 +173,7 @@ class SistemaVotacao:
                 self.votos_erro = progress.get("votos_erro", 0)
                 self.lote_atual = progress.get("lote_atual", 0)
                 self.votos_este_lote = progress.get("votos_este_lote", 0)
-                print(f"📂 Progresso carregado: {self.total_votos} votos (Lote {self.lote_atual})")
+                print(f"Progresso carregado: {self.total_votos} votos (Lote {self.lote_atual})")
                 return True
         except Exception as e:
             logging.error(f"Erro ao carregar progresso: {e}")
@@ -365,9 +365,9 @@ class SistemaVotacao:
         pausa_apos = lote_config["pausa_apos"]
         max_threads = lote_config["threads"]
         
-        print(f"\n📦 LOTE {lote_num}: {quantidade} votos (Threads: {max_threads})")
-        print(f"   ⏱️  Delay: {self.config.delays[delay_type]['min']}-{self.config.delays[delay_type]['max']}s")
-        print(f"   🕐 Início: {datetime.now().strftime('%H:%M:%S')}")
+        print(f"\nLOTE {lote_num}: {quantidade} votos (Threads: {max_threads})")
+        print(f"   Delay: {self.config.delays[delay_type]['min']}-{self.config.delays[delay_type]['max']}s")
+        print(f"   Início: {datetime.now().strftime('%H:%M:%S')}")
         
         inicio_lote = time.time()
         votos_enviados = 0
@@ -380,7 +380,7 @@ class SistemaVotacao:
                 
                 for i in range(quantidade):
                     if not self.running:
-                        print("🛑 Sistema interrompido pelo usuário")
+                        print("Sistema interrompido pelo usuário")
                         break
                         
                     future = executor.submit(self.enviar_voto_com_retry, i)
@@ -411,10 +411,10 @@ class SistemaVotacao:
         tempo_lote = time.time() - inicio_lote
         votos_por_hora = votos_enviados / (tempo_lote / 3600) if tempo_lote > 0 else 0
         
-        print(f"✅ Lote {lote_num} finalizado!")
-        print(f"   📊 {votos_enviados} votos em {tempo_lote//3600:.0f}h {(tempo_lote%3600)//60:.0f}min")
-        print(f"   🚀 Velocidade: {votos_por_hora:.0f} votos/hora")
-        print(f"   🎯 Total acumulado: {self.total_votos} votos")
+        print(f"Lote {lote_num} finalizado!")
+        print(f"   {votos_enviados} votos em {tempo_lote//3600:.0f}h {(tempo_lote%3600)//60:.0f}min")
+        print(f"   Velocidade: {votos_por_hora:.0f} votos/hora")
+        print(f"   Total acumulado: {self.total_votos} votos")
         
         # Salvar progresso após cada lote
         self.save_progress()
@@ -432,25 +432,25 @@ class SistemaVotacao:
         # Calcular taxa de sucesso
         taxa_sucesso = (self.votos_sucesso / self.total_votos * 100) if self.total_votos > 0 else 0
         
-        print(f"✅ {self.total_votos} votos (~{votos_por_hora:.0f}/hora) - Lote {self.lote_atual}")
-        print(f"   📈 Sucessos: {self.votos_sucesso} | ❌ Erros: {self.votos_erro} | 🎯 Taxa: {taxa_sucesso:.1f}%")
+        print(f"{self.total_votos} votos (~{votos_por_hora:.0f}/hora) - Lote {self.lote_atual}")
+        print(f"   Sucessos: {self.votos_sucesso} | Erros: {self.votos_erro} | Taxa: {taxa_sucesso:.1f}%")
     
     def executar(self):
         """Executa o sistema completo AJUSTADO para estabilidade"""
-        print("🚀 SISTEMA DE VOTAÇÃO ESTÁVEL - VERSÃO INFINITA")
+        print("SISTEMA DE VOTAÇÃO ESTÁVEL - VERSÃO INFINITA")
         print("=" * 70)
-        print("🎯 Objetivo: VOTAR INFINITAMENTE COM ESTABILIDADE")
-        print("⏰ Velocidade: OTIMIZADA PARA SUCESSOS")
-        print("🚀 Threads: 2-4 SIMULTÂNEOS")
-        print("🛡️  Proteções: ATIVADAS")
-        print("🔄 Sistema de retry: OTIMIZADO")
-        print("💾 Salvamento automático: ATIVADO")
-        print("🏥 Monitor de saúde: ATIVADO")
+        print("Objetivo: VOTAR INFINITAMENTE COM ESTABILIDADE")
+        print("Velocidade: OTIMIZADA PARA SUCESSOS")
+        print("Threads: 2-4 SIMULTÂNEOS")
+        print("Proteções: ATIVADAS")
+        print("Sistema de retry: OTIMIZADO")
+        print("Salvamento automático: ATIVADO")
+        print("Monitor de saúde: ATIVADO")
         print("=" * 70)
         
         # Carregar progresso anterior
         if self.load_progress():
-            print("📂 Continuando de onde parou...")
+            print("Continuando de onde parou...")
         
         try:
             while self.running:  # LOOP INFINITO
@@ -464,27 +464,27 @@ class SistemaVotacao:
                     try:
                         self.processar_lote(lote_config, self.lote_atual)
                     except KeyboardInterrupt:
-                        print("\n🛑 Interrupção solicitada pelo usuário")
+                        print("\nInterrupção solicitada pelo usuário")
                         break
                     except Exception as e:
                         logging.error(f"Erro crítico no lote {self.lote_atual}: {e}")
-                        print(f"⚠️ Erro crítico no lote {self.lote_atual}: {e}")
-                        print("🔄 Tentando continuar com próximo lote...")
+                        print(f"Erro crítico no lote {self.lote_atual}: {e}")
+                        print("Tentando continuar com próximo lote...")
                         time.sleep(30)  # Pausa maior
                         continue
                 
                 # Após completar todos os lotes, recomeça infinitamente
                 if self.running:
-                    print("\n🔄 RECOMEÇANDO CICLO INFINITO...")
-                    print(f"📊 Total acumulado: {self.total_votos} votos")
+                    print("\nRECOMEÇANDO CICLO INFINITO...")
+                    print(f"Total acumulado: {self.total_votos} votos")
                     print("=" * 50)
                     time.sleep(10)  # Pausa maior antes de recomeçar
             
         except KeyboardInterrupt:
-            print("\n🛑 Interrupção solicitada pelo usuário")
+            print("\nInterrupção solicitada pelo usuário")
         except Exception as e:
             logging.error(f"Erro crítico no sistema: {e}")
-            print(f"❌ Erro crítico: {e}")
+            print(f"Erro crítico: {e}")
         finally:
             # Estatísticas finais
             self.finalizar_execucao()
@@ -496,15 +496,15 @@ class SistemaVotacao:
         taxa_sucesso_final = (self.votos_sucesso / self.total_votos * 100) if self.total_votos > 0 else 0
         
         print("\n" + "=" * 70)
-        print("🎉 PROCESSO FINALIZADO!")
-        print(f"📊 Total de votos: {self.total_votos}")
-        print(f"✅ Sucessos: {self.votos_sucesso}")
-        print(f"❌ Erros: {self.votos_erro}")
-        print(f"🎯 Taxa de sucesso: {taxa_sucesso_final:.1f}%")
-        print(f"⏰ Tempo total: {tempo_total//3600:.0f}h {(tempo_total%3600)//60:.0f}min")
-        print(f"🚀 Velocidade média: {votos_por_hora_final:.0f} votos/hora")
-        print(f"🔄 Lotes completados: {self.lote_atual}")
-        print(f"🏁 Término: {datetime.now().strftime('%H:%M:%S')}")
+        print("PROCESSO FINALIZADO!")
+        print(f"Total de votos: {self.total_votos}")
+        print(f"Sucessos: {self.votos_sucesso}")
+        print(f"Erros: {self.votos_erro}")
+        print(f"Taxa de sucesso: {taxa_sucesso_final:.1f}%")
+        print(f"Tempo total: {tempo_total//3600:.0f}h {(tempo_total%3600)//60:.0f}min")
+        print(f"Velocidade média: {votos_por_hora_final:.0f} votos/hora")
+        print(f"Lotes completados: {self.lote_atual}")
+        print(f"Término: {datetime.now().strftime('%H:%M:%S')}")
         print("=" * 70)
         
         # Salvar progresso final
@@ -515,9 +515,9 @@ if __name__ == "__main__":
         sistema = SistemaVotacao()
         sistema.executar()
     except KeyboardInterrupt:
-        print("\n🛑 Programa interrompido pelo usuário")
+        print("\nPrograma interrompido pelo usuário")
     except Exception as e:
         logging.error(f"Erro fatal: {e}")
-        print(f"❌ Erro fatal: {e}")
+        print(f"Erro fatal: {e}")
     finally:
-        print("👋 Programa finalizado")
+        print("Programa finalizado")
